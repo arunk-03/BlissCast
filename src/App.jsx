@@ -38,7 +38,7 @@ const App = () => {
         );
         const data = await response.json();
         setGeoData(data.results || []);
-        console.log(data);
+        
       } catch (error) {
         console.error('Failed to fetch cities:', error);
         setGeoData([]);
@@ -67,7 +67,7 @@ const App = () => {
       const data = await response.json();
   
    
-      console.log("API Response:", data);
+  
   
     
       const temp = data.current_weather?.temperature || "N/A";

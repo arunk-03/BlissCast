@@ -2,6 +2,8 @@
 
 BlissCast is a sleek and intuitive weather app that brings you actual-time climate data in a beautiful, interactive manner. Built with **React** and **Tailwind CSS**, it provides an attractive user experience with easy history animations, current card additives, and essential weather information like temperature, humidity, cloud cowl, and wind pace.
 
+Check out the website here: [BlissCast](https://blisscast.vercel.app/)
+
 ## Key Features 🚀
 
 - **Real-Time Weather**: Pulls live weather records for temperature, humidity, cloud cover, and wind velocity from the **Open-Meteo API**.
