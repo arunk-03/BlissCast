@@ -1,18 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Cloud, Droplets, Wind, MapPin, Loader2, Sun, CloudRain, CloudSnow } from 'lucide-react';
+import { Search, Cloud, Droplets, Wind, MapPin, Loader2, Sun, CloudRain, CloudSnow, Moon, Thermometer, Eye, EyeOff } from 'lucide-react';
+import WeatherCard from './Components/WeatherCard';
+import WeatherParticles from './Components/WeatherParticles';
 
-const WeatherCard = ({ icon: Icon, label, value, unit }) => (
-  <div className="relative bg-white/10 backdrop-blur-md rounded-xl p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:bg-white/15 hover:scale-105 hover:shadow-xl shadow-lg group">
-    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    <Icon className="w-8 h-8 text-white/80 group-hover:text-white transition-colors duration-300" />
-    <span className="text-white/60 text-sm group-hover:text-white/80 transition-colors duration-300">{label}</span>
-    <div className="flex items-end gap-1">
-      <span className="text-2xl font-semibold text-white">{value}</span>
-      <span className="text-white/80 text-sm mb-1">{unit}</span>
+
+const ToggleButton = ({darkMode, setDarkMode}) => {
+  
+  console.log('Dark mode state:', darkMode);
+return (
+  <button
+    onClick={() => setDarkMode(!darkMode)}
+      className="fixed top-6 right-6 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-xl transition-all duration-300 hover:bg-white/20 hover:scale-110 group overflow-hidden">
+    <div className="relative w-4 h-4 md:w-7 md:h-7">
+      <Sun 
+        className={`absolute text-yellow-300 transition-all duration-500 ease-in-out transform ${
+          !darkMode 
+            ? 'translate-y-0 rotate-0 opacity-100' 
+            : '-translate-x-8 translate-y-8 rotate-180 opacity-0'
+        } w-4 h-4 md:w-7 md:h-7`}
+      />
+      <Moon 
+        className={`absolute text-white transition-all duration-500 ease-in-out transform ${
+          darkMode 
+            ? 'translate-y-0 rotate-0 opacity-100' 
+            : 'translate-x-8 -translate-y-8 -rotate-180 opacity-0'
+        } w-4 h-4 md:w-7 md:h-7`}
+      />
     </div>
-  </div>
+  </button> 
 );
 
+};
+
+const ParticleToggleButton = ({showParticles, setShowParticles}) => {
+  return (
+    <button
+      onClick={() => setShowParticles(!showParticles)}
+      className="fixed top-6 left-6 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-xl transition-all duration-300 hover:bg-white/20 hover:scale-110 group overflow-hidden">
+      <div className="relative w-4 h-4 md:w-7 md:h-7">
+        <Eye 
+          className={`absolute text-white transition-all duration-500 ease-in-out transform ${
+            showParticles 
+              ? 'translate-y-0 rotate-0 opacity-100' 
+              : 'translate-y-8 -translate-x-8 -rotate-180 opacity-0'
+          } w-4 h-4 md:w-7 md:h-7`}
+        />
+        <EyeOff 
+          className={`absolute text-white/70 transition-all duration-500 ease-in-out transform ${
+            !showParticles 
+              ? 'translate-y-0 rotate-0 opacity-100' 
+              : '-translate-y-8 translate-x-8 rotate-180 opacity-0'
+          } w-4 h-4 md:w-7 md:h-7`}
+        />
+      </div>
+    </button> 
+  );
+};
 
 const App = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -22,6 +65,10 @@ const App = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [weather, setWeather] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
+  const [showParticles, setShowParticles] = useState(true);
+
+  
 
   useEffect(() => {
     if (!searchTerm.trim()) {
@@ -102,10 +149,16 @@ const App = () => {
   };
   
   return (
-    <div className="min-h-screen w-screen overflow-hidden relative flex justify-center items-center gradient-background">
-      
+    <div className={`min-h-screen w-screen overflow-hidden relative flex justify-center items-center ${darkMode ? 'dark' : ''}`}>
+    {/* Gradient backgrounds */}
+    <div className="gradient-container gradient-background" />
+    <div className="gradient-container gradient-background-dark" />
+    {weather && showParticles && <WeatherParticles weather={weather} />}
+    
+    <ToggleButton darkMode={darkMode} setDarkMode={setDarkMode} />
+    <ParticleToggleButton showParticles={showParticles} setShowParticles={setShowParticles} />
 
-      <div className="flex flex-col bg-[a06262]/30 backdrop-blur-2xl p-8 h-[80vh] w-[90vw] md:w-[30vw] text-white z-10 relative rounded-3xl shadow-xl border border-white/20 transition-all duration-300 hover:shadow-2xl">
+      <div className="flex flex-col bg-white/10 backdrop-blur-2xl p-8 h-[70vh] w-[80vw] md:w-[30vw] md:h-[80vh] text-white z-10 relative rounded-3xl shadow-xl border border-white/30 hover:border-white/60 transition-all duration-300 hover:shadow-2xl weather-container">
         <div className="relative">
           <div className="relative">
             <input
@@ -113,7 +166,7 @@ const App = () => {
               placeholder="Search for a city..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full h-12 rounded-2xl pl-12 pr-4 bg-white/10 border border-white/20 text-white placeholder-white/50 outline-none shadow-lg transition-all  duration-300 ${isFocused ? 'bg-white/20 border-white/30 shadow-lg' : ''}`}
+              className={`w-full h-12 rounded-2xl pl-12 pr-4 bg-white/10 border border-white/20 hover:border-white/40 focus:border-white/40 text-white placeholder-white/50 outline-none shadow-lg transition-all duration-300 search-input ${isFocused ? 'bg-white/20 border-white/30' : ''}`}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
@@ -153,9 +206,9 @@ const App = () => {
             </div>
 
             {weatherData && (
-              <div className="grid grid-cols-2 gap-4 ">
+              <div className="grid grid-cols-2 gap-4 pt-5">
                  <WeatherCard
-      icon={Droplets}
+      icon={Thermometer}
       label="Temperature"
       value={weatherData.temperature}
       unit="°C"
@@ -183,8 +236,8 @@ const App = () => {
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-white/50">
-            <Cloud className="w-16 h-16 mb-4 animate-bounceSlow" />
-            <p className="text-lg">Search for a city to see weather details</p>
+            <Cloud className="w-16 h-16 mb-4 animate-bounceSlow hover:text-white/70 transition-colors duration-300" />
+            <p className="text-lg hover:text-white/70 transition-colors duration-300">Search for a city</p>
           </div>
         )}
       </div>

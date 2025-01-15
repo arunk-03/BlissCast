@@ -7,6 +7,8 @@ body {
   padding: 0;
   overflow: hidden;
 }
+
+
 @keyframes floating {
   0% {
     transform: translateY(0);
@@ -19,21 +21,215 @@ body {
   }
 }
 
+
+.gradient-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
 .gradient-background {
   background: linear-gradient(139deg,#766f8a,#efa774,#94aac2,#cff675);
   background-size: 240% 240%;
   animation: gradient-animation 8s ease infinite;
 }
 
+
+.gradient-background-dark {
+  background: linear-gradient(139deg, #3f4535, #2a5573, #574b3d, #2f1f54);
+  background-size: 240% 240%;
+  animation: gradient-animation 8s ease infinite;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+
 @keyframes gradient-animation {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
+}
+
+
+
+.dark .gradient-background-dark {
+  opacity: 1;
+}
+
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  top: -10px;
+  width: 2px;
+  height: 10px;
+  pointer-events: none;
+}
+
+/* Rain particles */
+.particle.rainy {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.1));
+  animation: rain linear infinite;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+  transform: rotate(20deg);
+  height: 15px;
+}
+
+/* Snow particles */
+.particle.snowy {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: snow linear infinite;
+  opacity: 0.8;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  filter: blur(0.3px);
+}
+
+/* Regular particles for cloudy weather */
+.particle.cloudy {
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: cloudy linear infinite;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+  filter: blur(0.5px);
+}
+
+/* Sun rays */
+.particle.sunny {
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.8), rgba(255, 165, 0, 0));
+  width: 4px;
+  height: 120px;
+  transform-origin: top;
+  animation: sunrays linear infinite;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  filter: blur(1px);
+}
+
+@keyframes rain {
+  0% {
+    transform: translateY(-10px) rotate(20deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes snow {
+  0% {
+    transform: translateY(-10px) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(45vh) rotate(180deg) scale(0.8);
+  }
+  55% {
+    transform: translateY(55vh) rotate(270deg) scale(1.2);
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes cloudy {
+  0% {
+    transform: translateY(-10px) translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+    transform: translateY(20vh) translateX(10px);
+  }
+  40% {
+    transform: translateY(40vh) translateX(-10px);
+  }
+  60% {
+    transform: translateY(60vh) translateX(10px);
+  }
+  80% {
+    opacity: 0.8;
+    transform: translateY(80vh) translateX(-10px);
+  }
+  100% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+}
+
+@keyframes sunrays {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  35% {
+    transform: translateY(35vh) rotate(15deg) scale(1.2);
+  }
+  65% {
+    transform: translateY(65vh) rotate(30deg) scale(0.8);
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Reduced glow effects */
+.dark .weather-container {
+  box-shadow: 0 0 20px -5px rgba(255, 255, 255, 0.07),
+              0 0 15px -5px rgba(255, 255, 255, 0.03);
+  transition: all 0.5s ease-in-out;
+}
+
+.dark .search-input {
+  box-shadow: 0 0 10px -5px rgba(255, 255, 255, 0.05);
+  transition: all 0.5s ease-in-out;
+}
+
+.dark .search-input:focus {
+  box-shadow: 0 0 15px -5px rgba(255, 255, 255, 0.07);
 }
 
