@@ -4,9 +4,8 @@ import WeatherCard from './Components/WeatherCard';
 import WeatherParticles from './Components/WeatherParticles';
 
 
-const ToggleButton = ({darkMode, setDarkMode}) => {
-  
-return (
+const ToggleButton = ({darkMode, setDarkMode}) => { 
+  return (
   <button
     onClick={() => setDarkMode(!darkMode)}
       className="fixed top-6 right-6 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-xl transition-all duration-300 hover:bg-white/20 hover:scale-110 group overflow-hidden">
@@ -102,43 +101,50 @@ const App = () => {
     setSelectedCity(city);
     setSearchTerm(`${city.name}, ${city.country}`);
     setGeoData([]);
-  
+
     try {
       setLoading(true);
-  
-    
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${city.latitude}&longitude=${city.longitude}&current_weather=true`
       );
       const data = await response.json();
-  
-   
-  
-  
+
+      const getWeatherType = (code) => {
+        
+        if ([0, 1].includes(code)) {
+          return "sunny";
+        }
+        
+        else if ([2, 3, 45, 48].includes(code)) {
+          return "cloudy";
+        }
     
+        else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(code)) {
+          return "rainy";
+        }
+      
+        else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+          return "snowy";
+        }
+    
+        return "cloudy";
+      };
+
+      const weatherCode = data.current_weather?.weathercode;
       const temp = data.current_weather?.temperature || "N/A";
       const windspeed = data.current_weather?.windspeed || "N/A";
       const cloudcover = data.current_weather?.cloudcover || "N/A";
       const humidity = data.current_weather?.humidity || "N/A";
-  
-      
+
       setWeatherData({
         temperature: temp,
         windspeed: windspeed,
         cloudcover: cloudcover,
         humidity: humidity,
       });
-  
-    
-      if (temp > 30) {
-        setWeather("sunny");
-      } else if (temp > 20) {
-        setWeather("cloudy");
-      } else if (temp > 10) {
-        setWeather("rainy");
-      } else {
-        setWeather("snowy");
-      }
+
+      setWeather(getWeatherType(weatherCode));
+
     } catch (error) {
       console.error("Failed to fetch weather data:", error);
       setWeatherData(null);
@@ -149,10 +155,15 @@ const App = () => {
   
   return (
     <div className={`min-h-screen w-screen overflow-hidden relative flex justify-center items-center ${darkMode ? 'dark' : ''}`}>
-    {/* Gradient backgrounds */}
+  
     <div className="gradient-container gradient-background" />
     <div className="gradient-container gradient-background-dark" />
-    {weather && showParticles && <WeatherParticles weather={weather} />}
+    
+    <WeatherParticles 
+      weather={weather}
+      darkMode={darkMode}
+      showParticles={showParticles}
+    />
     
     <ToggleButton darkMode={darkMode} setDarkMode={setDarkMode} />
     <ParticleToggleButton showParticles={showParticles} setShowParticles={setShowParticles} />
@@ -194,8 +205,8 @@ const App = () => {
         {selectedCity ? (
           <div className="flex-1 flex flex-col mt-3">
             <div className="text-center">
-              <h2 className="text-3xl font-semibold mb-1">{selectedCity.name}</h2>
-              <p className="text-white/70">{selectedCity.country}</p>
+              <h2 className="text-2xl font-semibold mb-1">{selectedCity.name}</h2>
+              <p className="text-white/70 capitalize">{weather}</p>
               <div className="mt-4">
                 {weather === 'sunny' && <Sun className="w-16 h-16 text-yellow-400 mx-auto animate-bounceSlow" />}
                 {weather === 'rainy' && <CloudRain className="w-16 h-16 text-blue-300 mx-auto animate-bounceSlow" />}

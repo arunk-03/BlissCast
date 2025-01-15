@@ -79,73 +79,97 @@ body {
   pointer-events: none;
   z-index: 1;
   overflow: hidden;
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
+}
+
+.particles-container.hiding {
+  opacity: 0;
+  transform: scale(1.1);
 }
 
 .particle {
-  position: absolute;
-  top: -10px;
-  width: 2px;
-  height: 10px;
-  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
 }
 
 /* Rain particles */
 .particle.rainy {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.1));
-  animation: rain linear infinite;
-  box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
-  transform: rotate(20deg);
-  height: 15px;
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(180deg, 
+    rgba(145, 188, 240, 0.95), 
+    rgba(145, 188, 240, 0.7)
+  );
+  filter: blur(0.5px);
+  animation: rainfall linear infinite;
 }
 
 /* Snow particles */
 .particle.snowy {
-  width: 6px;
-  height: 6px;
+  position: absolute;
   background: white;
   border-radius: 50%;
-  animation: snow linear infinite;
-  opacity: 0.8;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-  filter: blur(0.3px);
+  filter: blur(1.5px);
+  box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.3);
+  animation: snowfall linear infinite;
 }
 
 /* Regular particles for cloudy weather */
 .particle.cloudy {
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.8);
+  width: 100px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 25px;
+  position: relative;
+  filter: blur(3px);
+  animation: cloud-float linear infinite;
+  animation-duration: 25s;
+}
+
+.particle.cloudy::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 25px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 50%;
-  animation: cloudy linear infinite;
-  box-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
-  filter: blur(0.5px);
+  box-shadow: 
+    -25px 10px 0 -5px rgba(255, 255, 255, 0.15),
+    25px 10px 0 -5px rgba(255, 255, 255, 0.15);
 }
 
 /* Sun rays */
 .particle.sunny {
-  background: linear-gradient(180deg, rgba(255, 215, 0, 0.8), rgba(255, 165, 0, 0));
-  width: 4px;
-  height: 120px;
+  position: absolute;
+  background: linear-gradient(180deg, 
+    rgba(255, 220, 100, 0.7) 0%,
+    rgba(255, 166, 0, 0) 100%
+  );
+  width: 5px;
+  height: 100vh;
+  filter: blur(3px);
   transform-origin: top;
-  animation: sunrays linear infinite;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-  filter: blur(1px);
+  animation: sunShimmer ease-in-out infinite;
+  transition: opacity 0.7s ease-in-out;
 }
 
-@keyframes rain {
+@keyframes rainfall {
   0% {
-    transform: translateY(-10px) rotate(20deg);
+    transform: translateY(-20px) rotate(5deg);
     opacity: 0;
   }
-  10% {
-    opacity: 1;
+  20% {
+    opacity: 0.9;
   }
   90% {
-    opacity: 1;
+    opacity: 0.9;
   }
   100% {
-    transform: translateY(100vh) rotate(20deg);
-    opacity: 0;
+    transform: translateY(100vh) rotate(5deg);
+    opacity: 0.7;
   }
 }
 
@@ -219,7 +243,7 @@ body {
 
 /* Reduced glow effects */
 .dark .weather-container {
-  box-shadow: 0 0 20px -5px rgba(255, 255, 255, 0.07),
+  box-shadow: 0 0 20px -5px rgba(255, 255, 255, 0.256),
               0 0 15px -5px rgba(255, 255, 255, 0.03);
   transition: all 0.5s ease-in-out;
 }
@@ -231,5 +255,61 @@ body {
 
 .dark .search-input:focus {
   box-shadow: 0 0 15px -5px rgba(255, 255, 255, 0.07);
+}
+
+@keyframes cloud-float {
+  0% {
+    transform: translateX(-150px) translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 150px)) translateY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes sunrays-flicker {
+  0%, 100% {
+    opacity: 0.5;
+    height: 120px;
+  }
+  50% {
+    opacity: 0.8;
+    height: 140px;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) translateX(var(--drift-x));
+    opacity: 0.7;
+  }
+}
+
+@keyframes sunShimmer {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(20px) scaleY(1.1);
+  }
 }
 
