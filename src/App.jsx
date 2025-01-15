@@ -6,7 +6,6 @@ import WeatherParticles from './Components/WeatherParticles';
 
 const ToggleButton = ({darkMode, setDarkMode}) => {
   
-  console.log('Dark mode state:', darkMode);
 return (
   <button
     onClick={() => setDarkMode(!darkMode)}
